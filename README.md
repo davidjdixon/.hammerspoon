@@ -10,7 +10,8 @@
 
 ### Darkmode
 
-Install OpenInTerminal-Lite.app and OpenInEditor-Lite.app from <https://github.com/Ji4n1ng/OpenInTerminal>
+1. Install OpenInTerminal-Lite.app and OpenInEditor-Lite.app from <https://github.com/Ji4n1ng/OpenInTerminal>
+2. Add the above apps to the Finder by dragging to the toolbar. ![Apps added to Finder toolbar](/docs/images/dark-mode-finder-apps.png)
 
 ### Location
 
