@@ -1,7 +1,7 @@
 -- module: location switching features
 local m = {}
 
-local uapp = require('utils.app')
+local uapp = require("utils.app")
 
 -- Wifi-detected location settings
 
@@ -26,7 +26,7 @@ local function wifiChanged()
 	local newLocation = hs.wifi.currentNetwork()
 	local lastLocation = m.currentLocation
 
-	hsm.log.d("Wifi Changed: " .. hs.wifi.currentNetwork())
+	hsm.log.d("Wifi Changed: " .. (newLocation or "N/A"))
 
 	if newLocation == lastLocation then
 		hsm.log.d("no loc change")
@@ -37,18 +37,18 @@ local function wifiChanged()
 
 	-- perform actions for leaving locations before joining
 	if lastLocation then
-		uapp.notify('Wifi', 'Left ' .. lastLocation, 2)
+		uapp.notify("Wifi", "Left " .. lastLocation, 2)
 	end
 
 	if newLocation then
-		uapp.notify('Wifi', 'Joined ' .. newLocation, 2)
+		uapp.notify("Wifi", "Joined " .. newLocation, 2)
 	end
 
 	switchFeatures()
 end
 
 local function isAC()
-	return hs.battery.powerSource() == 'AC Power'
+	return hs.battery.powerSource() == "AC Power"
 end
 
 local function powerChanged()
@@ -66,7 +66,7 @@ local function powerChanged()
 end
 
 function m.start()
-	hsm.log.d("wifi ssid: " .. hs.wifi.currentNetwork())
+	hsm.log.d("wifi ssid: " .. (hs.wifi.currentNetwork() or "N/A"))
 	m.currentLocation = hs.wifi.currentNetwork()
 	m.isPluggedIn = isAC()
 
