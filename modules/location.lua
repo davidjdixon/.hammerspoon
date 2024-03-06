@@ -6,8 +6,8 @@ local uapp = require("utils.app")
 -- Wifi-detected location settings
 
 local function switchFeatures()
-
-	hsm.log.d("switchFeatures: Wifi='" .. (m.currentLocation or "None") .. "', Power=" .. (m.isPluggedIn and "true" or "false"))
+	hsm.log.d("switchFeatures: Wifi='" ..
+		(m.currentLocation or "None") .. "', Power=" .. (m.isPluggedIn and "true" or "false"))
 
 	if m.config.ssid[m.currentLocation] == nil then
 		return
@@ -66,6 +66,7 @@ local function powerChanged()
 end
 
 function m.start()
+	hs.location.get() -- enable location services
 	hsm.log.d("wifi ssid: " .. (hs.wifi.currentNetwork() or "N/A"))
 	m.currentLocation = hs.wifi.currentNetwork()
 	m.isPluggedIn = isAC()

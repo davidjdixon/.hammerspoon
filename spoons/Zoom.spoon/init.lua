@@ -1,3 +1,4 @@
+---@diagnostic disable: lowercase-global
 --[[
 
  Known issues:
@@ -17,7 +18,7 @@ obj.homepage = "https://github.com/jpf/Zoom.spoon"
 
 obj.callbackFunction = nil
 
-function unpack (t, i)
+function unpack(t, i)
   i = i or 1
   if t[i] ~= nil then
     return t[i], unpack(t, i + 1)
@@ -62,39 +63,40 @@ zoomState = machine.create({
 
 local endMeetingDebouncer = hs.timer.delayed.new(0.2, function()
   -- Only end the meeting if the "Meeting" menu is no longer present
-  if not _check({"Meeting", "Invite"}) then
+  if not _check({ "Meeting", "Invite..." }) then
     zoomState:endMeeting()
   end
 end)
 
-appWatcher = hs.application.watcher.new(function (appName, eventType, appObject)
+appWatcher = hs.application.watcher.new(function(appName, eventType, appObject)
   if (appName == "zoom.us" and eventType == hs.application.watcher.launched) then
     zoomState:start()
 
-    watcher = appObject:newWatcher(function (element, event, watcher, userData)
+    watcher = appObject:newWatcher(function(element, event, watcher, userData)
       local eventName = tostring(event)
       local windowTitle = ""
       if element['title'] ~= nil then
         windowTitle = element:title()
       end
 
-      if(eventName == "AXTitleChanged" and windowTitle == "Zoom Meeting") then
+      if (eventName == "AXTitleChanged" and windowTitle == "Zoom Meeting") then
         zoomState:startMeeting()
-      elseif(eventName == "AXTitleChanged" and windowTitle == "Zoom Webinar") then
+      elseif (eventName == "AXTitleChanged" and windowTitle == "Zoom Webinar") then
         zoomState:startMeeting()
-      elseif(eventName == "AXWindowCreated" and windowTitle == "Zoom Meeting") then
+      elseif (eventName == "AXWindowCreated" and windowTitle == "Zoom Meeting") then
         zoomState:endShare()
-      elseif(eventName == "AXWindowCreated" and windowTitle == "Zoom Webinar") then
+      elseif (eventName == "AXWindowCreated" and windowTitle == "Zoom Webinar") then
         zoomState:startMeeting()
-      elseif(eventName == "AXWindowCreated" and windowTitle == "Zoom") then
+      elseif (eventName == "AXWindowCreated" and windowTitle == "Zoom") then
         zoomState:start()
-      elseif(eventName == "AXWindowCreated" and windowTitle:sub(1, #"zoom share") == "zoom share") then
+      elseif (eventName == "AXWindowCreated" and windowTitle:sub(1, #"zoom share") == "zoom share") then
         zoomState:startShare()
-      elseif(eventName == "AXUIElementDestroyed") then
+      elseif (eventName == "AXUIElementDestroyed") then
         endMeetingDebouncer:start()
       end
     end, { name = "zoom.us" })
-    watcher:start({hs.uielement.watcher.windowCreated, hs.uielement.watcher.titleChanged, hs.uielement.watcher.elementDestroyed})
+    watcher:start({ hs.uielement.watcher.windowCreated, hs.uielement.watcher.titleChanged,
+      hs.uielement.watcher.elementDestroyed })
   elseif (eventType == hs.application.watcher.terminated) then
     if (watcher ~= nil) then
       watcher:stop()
@@ -134,9 +136,9 @@ function obj:_change(changeEvent)
 end
 
 function obj:getAudioStatus()
-  if _check({"Meeting", "Unmute Audio"}) then
+  if _check({ "Meeting", "Unmute Audio" }) then
     return 'muted'
-  elseif _check({"Meeting", "Mute Audio"}) then
+  elseif _check({ "Meeting", "Mute Audio" }) then
     return 'unmuted'
   else
     return 'off'
@@ -144,9 +146,9 @@ function obj:getAudioStatus()
 end
 
 function obj:getVideoStatus()
-  if _check({"Meeting", "Start Video"}) then
+  if _check({ "Meeting", "Start Video" }) then
     return 'videoStopped'
-  elseif _check({"Meeting", "Stop Video"}) then
+  elseif _check({ "Meeting", "Stop Video" }) then
     return 'videoStarted'
   else
     return 'off'
@@ -193,7 +195,7 @@ end
 --- Method
 --- Mutes the audio in Zoom, if Zoom is currently unmuted
 function obj:mute()
-  if obj:getAudioStatus() == 'unmuted' and self:_click({"Meeting", "Mute Audio"}) then
+  if obj:getAudioStatus() == 'unmuted' and self:_click({ "Meeting", "Mute Audio" }) then
     audioStatus = 'muted'
     self:_change("muted")
   end
@@ -203,7 +205,7 @@ end
 --- Method
 --- Unmutes the audio in Zoom, if Zoom is currently muted
 function obj:unmute()
-  if obj:getAudioStatus() == 'muted' and self:_click({"Meeting", "Unmute Audio"}) then
+  if obj:getAudioStatus() == 'muted' and self:_click({ "Meeting", "Unmute Audio" }) then
     audioStatus = 'unmuted'
     self:_change("unmuted")
   end
@@ -213,7 +215,7 @@ end
 --- Method
 --- Stops the video in Zoom, if Zoom is currently streaming video
 function obj:stopVideo()
-  if obj:getVideoStatus() == 'videoStarted' and self:_click({"Meeting", "Stop Video"}) then
+  if obj:getVideoStatus() == 'videoStarted' and self:_click({ "Meeting", "Stop Video" }) then
     videoStatus = 'videoStopped'
     self:_change("videoStopped")
   end
@@ -223,7 +225,7 @@ end
 --- Method
 --- Starts the video in Zoom, if Zoom is currently not streaming video
 function obj:startVideo()
-  if obj:getVideoStatus() == 'videoStopped' and self:_click({"Meeting", "Start Video"}) then
+  if obj:getVideoStatus() == 'videoStopped' and self:_click({ "Meeting", "Start Video" }) then
     videoStatus = 'videoStarted'
     self:_change("videoStarted")
   end
@@ -232,7 +234,6 @@ end
 function obj:inMeeting()
   return zoomState:is('meeting') or zoomState:is('sharing')
 end
-
 
 --- Zoom:setStatusCallback(func)
 --- Method

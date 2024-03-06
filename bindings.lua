@@ -7,6 +7,8 @@ local bindings = {}
 local mod = {
 	s   = { 'shift' },
 	o   = { 'alt' },
+	c   = { 'cmd' },
+	ct  = { 'ctrl' },
 	cc  = { 'cmd', 'ctrl' },
 	co  = { 'cmd', 'alt' },
 	os  = { 'alt', 'shift' },
@@ -21,12 +23,18 @@ local function keyCode(key, modifiers)
 	end
 end
 
-local function remapKey(modifiers, key, keyCode)
-	hs.hotkey.bind(modifiers, key, keyCode, nil, keyCode)
+local function remapKey(key, modifiers, keyCode)
+	return hs.hotkey.new(modifiers, key, keyCode, nil, keyCode)
 end
 
+local globalBindings = {
+	{ '§', {}, keyCode('3', mod.o) }
+}
+
 function bindings.bind()
-	remapKey({}, '§', keyCode('3', mod.o))
+	for _, v in ipairs(globalBindings) do
+		remapKey(v[1], v[2], v[3]):enable()
+	end
 end
 
 return bindings
