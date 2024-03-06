@@ -17,7 +17,7 @@ local function create_transition(name)
     if self.asyncState == NONE then
       can, to = self:can(name)
       from = self.current
-      params = { self, name, from, to, ...}
+      params = { self, name, from, to, ... }
 
       if not can then return false end
       self.currentTransitioningEvent = name
@@ -55,11 +55,11 @@ local function create_transition(name)
       self.currentTransitioningEvent = nil
       return true
     else
-    	if string.find(self.asyncState, "WaitingOnLeave") or string.find(self.asyncState, "WaitingOnEnter") then
-    		self.asyncState = NONE
-    		transition(self, ...)
-    		return true
-    	end
+      if string.find(self.asyncState, "WaitingOnLeave") or string.find(self.asyncState, "WaitingOnEnter") then
+        self.asyncState = NONE
+        transition(self, ...)
+        return true
+      end
     end
 
     self.currentTransitioningEvent = nil
@@ -119,18 +119,18 @@ function machine:cannot(e)
 end
 
 function machine:todot(filename)
-  local dotfile = io.open(filename,'w')
+  local dotfile = io.open(filename, 'w')
   dotfile:write('digraph {\n')
-  local transition = function(event,from,to)
-    dotfile:write(string.format('%s -> %s [label=%s];\n',from,to,event))
+  local transition = function(event, from, to)
+    dotfile:write(string.format('%s -> %s [label=%s];\n', from, to, event))
   end
   for _, event in pairs(self.options.events) do
     if type(event.from) == 'table' then
       for _, from in ipairs(event.from) do
-        transition(event.name,from,event.to)
+        transition(event.name, from, event.to)
       end
     else
-      transition(event.name,event.from,event.to)
+      transition(event.name, event.from, event.to)
     end
   end
   dotfile:write('}\n')

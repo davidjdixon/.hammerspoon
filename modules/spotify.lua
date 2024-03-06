@@ -21,7 +21,7 @@ local function bind()
     local targetVol = round(hs.spotify.getVolume(), 5) + 5
     hs.spotify.setVolume(targetVol)
     hs.alert.closeAll(0.0)
-    hs.alert.show('Spotify Volume ' ..targetVol .. '%', {})
+    hs.alert.show('Spotify Volume ' .. targetVol .. '%', {})
   end)
 
   local lastSpotifyVolume = nil

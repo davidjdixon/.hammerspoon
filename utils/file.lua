@@ -3,7 +3,7 @@ local lib = {}
 
 -- Return true if the file exists, else false
 function lib.exists(name)
-  local f = io.open(name,'r')
+  local f = io.open(name, 'r')
   if f ~= nil then
     io.close(f)
     return true
@@ -13,7 +13,7 @@ function lib.exists(name)
 end
 
 -- Takes a list of path parts, returns a string with the parts delimited by '/'
-function lib.toPath(...) return table.concat({...}, '/') end
+function lib.toPath(...) return table.concat({ ... }, '/') end
 
 -- Splits a string by '/', returning the parent dir, filename (with extension),
 -- and the extension alone.
@@ -69,7 +69,7 @@ function lib.move(from, to, force, onSuccess, onFailure)
   end
 
   if lib.exists(from) then
-    hs.task.new('/bin/mv', callback, {force, from, to}):start()
+    hs.task.new('/bin/mv', callback, { force, from, to }):start()
   end
 end
 
@@ -107,10 +107,10 @@ function lib.unhideExtension(file, ext, hiddenExtensions)
   if ext == nil or hiddenExtensions == nil or hiddenExtensions[ext] == nil then
     local function unhide(exitCode, stdOut, stdErr)
       if exitCode == 0 and tonumber(stdOut) == 1 then
-        hs.task.new('/usr/bin/SetFile', nil, {'-a', 'e', file}):start()
+        hs.task.new('/usr/bin/SetFile', nil, { '-a', 'e', file }):start()
       end
     end
-    hs.task.new('/usr/bin/GetFileInfo', unhide, {'-aE', file}):start()
+    hs.task.new('/usr/bin/GetFileInfo', unhide, { '-aE', file }):start()
   end
 end
 
@@ -128,7 +128,7 @@ function lib.isColorTagged(file)
   local tags = hs.fs.tagsGet(file)
 
   if tags ~= nil then
-    for _,tag in ipairs(tags) do
+    for _, tag in ipairs(tags) do
       if colors[tag] then return true end
     end
   end
@@ -136,13 +136,13 @@ function lib.isColorTagged(file)
 end
 
 -- Simply set a single tag on a file
-function lib.setTag(file, tag) hs.fs.tagsAdd(file, {tag}) end
+function lib.setTag(file, tag) hs.fs.tagsAdd(file, { tag }) end
 
 -- Return a string that ensures the given file ends with the given extension.
 function lib.withExtension(filePath, ext)
   local path = filePath
-  local extMatch = '%.'..ext..'$'
-  if not string.find(path, extMatch) then path = path..'.'..ext end
+  local extMatch = '%.' .. ext .. '$'
+  if not string.find(path, extMatch) then path = path .. '.' .. ext end
   return path
 end
 
@@ -170,7 +170,7 @@ function lib.mostRecent(parent, attr)
   if not lib.exists(parent) then return nil end
 
   -- make sure attr is valid and default to modification
-  local attrs = {access=true, change=true, modification=true, creation=true}
+  local attrs = { access = true, change = true, modification = true, creation = true }
   if not attrs[attr] then attr = 'modification' end
 
   local max = 0

@@ -3,9 +3,9 @@ local lib = {}
 
 -- Sleep for (possibly fractional) number of seconds
 local clock = os.clock
-function lib.sleep(n)  -- seconds
-   local t0 = clock()
-   while clock() - t0 <= n do end
+function lib.sleep(n) -- seconds
+  local t0 = clock()
+  while clock() - t0 <= n do end
 end
 
 -- Helper for timers that returns true if "time" has reached "when"
@@ -52,7 +52,7 @@ function lib.todayname(secs) return os.date('%a', secs) end
 
 -- Return a string that converts a number of minutes into MM:SS format.
 function lib.prettyMinutes(minutes)
-  return string.format('%02d:%02d', math.floor(minutes/60), minutes%60)
+  return string.format('%02d:%02d', math.floor(minutes / 60), minutes % 60)
 end
 
 return lib
