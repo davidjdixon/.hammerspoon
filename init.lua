@@ -7,7 +7,7 @@ local modules = {
   'spotify',
   'darkmode',
   'location',
-  'zoom'
+  'camera'
 }
 
 -- global modules namespace (short for easy console use)
