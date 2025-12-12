@@ -3,6 +3,9 @@
 --
 local bindings = {}
 
+-- Store hotkeys so we can disable them on reload
+local active_hotkeys = {}
+
 -- define some modifier key combinations
 local mod = {
 	s   = { 'shift' },
@@ -32,9 +35,24 @@ local globalBindings = {
 }
 
 function bindings.bind()
+	-- First, disable any existing hotkeys
+	bindings.unbind()
+
 	for _, v in ipairs(globalBindings) do
-		remapKey(v[1], v[2], v[3]):enable()
+		local hotkey = remapKey(v[1], v[2], v[3])
+		hotkey:enable()
+		table.insert(active_hotkeys, hotkey)
 	end
+end
+
+function bindings.unbind()
+	for _, hotkey in ipairs(active_hotkeys) do
+		if hotkey then
+			hotkey:disable()
+			hotkey:delete()
+		end
+	end
+	active_hotkeys = {}
 end
 
 return bindings

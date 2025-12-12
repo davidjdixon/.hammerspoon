@@ -1,6 +1,6 @@
 require('hs.ipc')
 
-local LOGLEVEL = 'info' -- 'nothing', 'error', 'warning', 'info', 'debug', 'verbose'
+local LOGLEVEL = 'debug' -- 'nothing', 'error', 'warning', 'info', 'debug', 'verbose'
 
 -- List of modules to load (found in Modules/ dir)
 local modules = {
@@ -52,6 +52,10 @@ end
 
 -- global function to stop modules and reload hammerspoon config
 function hs_reload()
+  -- unbind hotkeys first
+  local bindings = require('bindings')
+  bindings.unbind()
+
   hs.fnutils.each(hsm, stopModule)
   hs.reload()
 end
@@ -62,4 +66,5 @@ hs.fnutils.each(hsm, startModule)
 
 -- load and bind key bindings
 local bindings = require('bindings')
+bindings.unbind()
 bindings.bind()

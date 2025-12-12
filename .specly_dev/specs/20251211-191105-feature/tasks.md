@@ -1,0 +1,21 @@
+- [ ] 1. Implement ModuleRegistry lifecycle layer
+  - Create [`modules/registry.lua`](modules/registry.lua:1) with `loadModule`, `configureModule`, `startModule`, `stopModule`, and `reloadModule` backed by `pcall`-guarded requires and lifecycle calls; update [`init.lua`](init.lua:1) to delegate module discovery/start/stop through the registry while preserving hotkey binding hooks and emitting structured lifecycle logs.
+  - Covers [R1.1], [R1.2], [R1.3]
+- [ ] 2. Add configuration validation scaffolding
+  - Add [`modules/config_validator.lua`](modules/config_validator.lua:1) to verify `config.global.paths` and module-required keys, integrate the validator into the registry bootstrap before module start, and emit warnings with fallbacks via `hsm.log.w`.
+  - Covers [R3.2]
+- [ ] 3. Introduce FailureMonitor and hot reload command
+  - Implement [`modules/failure_monitor.lua`](modules/failure_monitor.lua:1) to track failure counts, integrate it with ModuleRegistry error paths, extend [`config.lua`](config.lua:1) with `global.failurePolicy`, and expose `hs_reload_module` in [`init.lua`](init.lua:1) for targeted restarts.
+  - Covers [R2.3], [R1.3]
+- [ ] 4. Standardise module metadata and defaults
+  - Update [`modules/camera.lua`](modules/camera.lua:1), [`modules/location.lua`](modules/location.lua:1), [`modules/darkmode.lua`](modules/darkmode.lua:1), [`modules/spotify.lua`](modules/spotify.lua:1), and [`modules/zoom.lua`](modules/zoom.lua:1) to export `metadata` with descriptions, dependency lists, watcher descriptors, and configuration defaults; extend [`modules/registry.lua`](modules/registry.lua:1) to merge `metadata.configDefaults` before applying user configuration.
+  - Covers [R3.3], [R1.2]
+- [ ] 5. Wrap runtime watchers with WatcherSupervisor
+  - Create [`modules/watcher_supervisor.lua`](modules/watcher_supervisor.lua:1) that restarts failed watchers once with optional backoff, refactor camera and location watcher setup to use it, and route repeated failures to FailureMonitor.
+  - Covers [R2.1]
+- [ ] 6. Surface dependency failures through NotificationBridge
+  - Add [`modules/notification_bridge.lua`](modules/notification_bridge.lua:1) to centralise dependency error alerts, update modules invoking `hs.shortcuts`, `hs.spotify`, or `hs.application` to call the bridge on failure, and ensure alerts combine console logging with `hs.alert.show`.
+  - Covers [R2.2]
+- [ ] 7. Emit post-initialisation observability summary
+  - After all modules start, enhance [`init.lua`](init.lua:1) or [`modules/registry.lua`](modules/registry.lua:1) to compile module status, active watchers, and resolved config paths into a single `hsm.log` summary message, leveraging FailureMonitor statistics where available.
+  - Covers [R3.1]
