@@ -26,12 +26,27 @@ local function keyCode(key, modifiers)
 	end
 end
 
+local function keyCodeRightAlt(key)
+	return function()
+		local keyDown = hs.eventtap.event.newKeyEvent({}, string.lower(key), true)
+		keyDown:rawFlags(
+			hs.eventtap.event.rawFlagMasks.deviceRightAlternate
+			+ hs.eventtap.event.rawFlagMasks.alternate
+		):post()
+		local keyUp = hs.eventtap.event.newKeyEvent({}, string.lower(key), false)
+		keyUp:rawFlags(
+			hs.eventtap.event.rawFlagMasks.deviceRightAlternate
+			+ hs.eventtap.event.rawFlagMasks.alternate
+		):post()
+	end
+end
+
 local function remapKey(key, modifiers, keyCode)
 	return hs.hotkey.new(modifiers, key, keyCode, nil, keyCode)
 end
 
 local globalBindings = {
-	{ '§', {}, keyCode('3', mod.o) }
+	{ '§', {}, keyCodeRightAlt('3') }
 }
 
 function bindings.bind()
