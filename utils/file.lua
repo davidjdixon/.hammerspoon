@@ -50,6 +50,8 @@ function lib.append(file, text)
   if text == '' then return end
 
   local f = io.open(file, 'a')
+  if f == nil then return end
+
   f:write(tostring(text) .. '\n')
   f:close()
 end
@@ -154,6 +156,7 @@ function lib.loadJSON(file)
     local content = f:read('*all')
     f:close()
     if content then
+      local ok
       ok, data = pcall(function() return hs.json.decode(content) end)
       if not ok then
         hsm.log.e('loadJSON:', data)
