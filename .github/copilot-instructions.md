@@ -9,7 +9,7 @@
 ## Configuration
 
 - Keep user-specific values in [config.lua](config.lua) (git-tracked here but can be templated from [config-example.lua](config-example.lua)); `config.global.paths` already maps `$HOME`, `$TMPDIR`, and `.hammerspoon/icons`.
-- Module configs mirror their file names (`config.zoom`, `config.darkmode`, etc.); add a table there before referencing `hsm.config` inside a new module to avoid nil errors.
+- Module configs mirror their file names (`config.camera`, `config.darkmode`, etc.); add a table there before referencing `hsm.config` inside a new module to avoid nil errors.
 - Paths should be composed through `utils.file.toPath()` to stay portable on macOS; `hsm.config.paths.icons` is the canonical location for Finder icon assets.
 
 ## Module Lifecycle Pattern
@@ -20,8 +20,7 @@
 
 ## Key Modules
 
-- Zoom workflow ([modules/zoom.lua](modules/zoom.lua)) listens to `Zoom.spoon` status transitions and invokes macOS Shortcuts defined at `config.zoom.shortcut.{start|stop}`; always update the config when renaming Shortcuts to avoid silent failures.
-- Camera watcher ([modules/camera.lua](modules/camera.lua)) toggles the same focus Shortcuts whenever any camera reports `isInUse()`; strings are currently hard-coded, so keep them in sync with `config.zoom.shortcut`.
+- Camera watcher ([modules/camera.lua](modules/camera.lua)) toggles macOS Shortcuts defined at `config.camera.shortcut.{start|stop}` whenever any camera reports `isInUse()`; always update the config when renaming Shortcuts to avoid silent failures.
 - Dark mode tooling ([modules/darkmode.lua](modules/darkmode.lua)) re-applies Finder toolbar icons using `/usr/local/bin/fileicon`; ensure new icon variants follow `icons/toolbar/icon_<name>_{light|dark}.icns`.
 - Location automations ([modules/location.lua](modules/location.lua)) watch Wi-Fi SSID and power source to mute/unmute via `hs.audiodevice`; extend behavior by adding flags under `config.location.ssid['Network Name']`.
 - Spotify media keys ([modules/spotify.lua](modules/spotify.lua)) bind raw F10–F12 keys; avoid double-binding by unbinding any Apple system-level volume shortcuts.
@@ -38,8 +37,8 @@
 
 ## External Dependencies
 
-- Requires Hammerspoon with `hs.ipc`, `hs.shortcuts`, `hs.camera`, `hs.location`, and `hs.wifi`; install the bundled [spoons/Zoom.spoon](spoons/Zoom.spoon) to keep the Zoom module functional.
-- Dark mode automation depends on Ji4n1ng’s OpenInTerminal/OpenInEditor Lite apps pinned to the Finder toolbar and the `fileicon` CLI; camera/Zoom automation assumes Shortcuts named in `config.zoom.shortcut`.
+- Requires Hammerspoon with `hs.ipc`, `hs.shortcuts`, `hs.camera`, `hs.location`, and `hs.wifi`.
+- Dark mode automation depends on Ji4n1ng’s OpenInTerminal/OpenInEditor Lite apps pinned to the Finder toolbar and the `fileicon` CLI; camera automation assumes Shortcuts named in `config.camera.shortcut`.
 
 ## Developer Workflow
 

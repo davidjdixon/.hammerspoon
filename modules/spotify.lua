@@ -3,13 +3,17 @@ local m = {}
 
 local bindings = {}
 
+-- Round to the nearest step so repeated volume changes stay aligned with the
+-- configured 5% increments rather than drifting on Spotify's raw values.
 local function round(num, mult)
   return math.floor(num / mult + 0.5) * mult
 end
 
 local function bind()
+  -- Bind raw media keys directly to Spotify volume instead of the system output
+  -- volume so speakers and app volume can be controlled independently.
   -- volume ↓
-  bindings.f11 = hs.hotkey.bind("", "f11", function()
+  bindings.f11 = hs.hotkey.bind('', 'f11', function()
     local targetVol = round(hs.spotify.getVolume(), 5) - 5
     hs.spotify.setVolume(targetVol)
     hs.alert.closeAll(0.0)
@@ -43,6 +47,7 @@ local function bind()
 end
 
 local function unbind()
+  -- Hotkeys must be removed on reload or duplicate handlers will accumulate.
   for _, binding in ipairs(bindings) do
     binding.delete()
   end

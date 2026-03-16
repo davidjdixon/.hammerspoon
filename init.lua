@@ -6,6 +6,7 @@ local LOGLEVEL = 'debug' -- 'nothing', 'error', 'warning', 'info', 'debug', 'ver
 local modules = {
   'spotify',
   'darkmode',
+  'audio',
   'location',
   'camera'
 }

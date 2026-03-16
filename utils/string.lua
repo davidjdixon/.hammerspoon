@@ -28,7 +28,7 @@ end
 
 -- remove surrounding quotes from a string
 function lib.unquote(str)
-  local newStr = str:match("['\"](.-)['\"]")
+  local newStr = str:match('[\'"](.-)[\'"]')
   if newStr ~= nil then return newStr end
   return str
 end
