@@ -13,20 +13,49 @@ function lib.timesUp(time, when)
   return time > 0 and time % when == 0
 end
 
+---@class TimeDateParts
+---@field year integer
+---@field month integer
+---@field day integer
+---@field hour integer
+---@field min integer
+---@field sec integer
+---@field wday integer
+---@field yday integer
+---@field isdst boolean
+---@field hour12 integer
+---@field ap 'am'|'pm'
+
 -- Return a string that represents a date based on the given epoch seconds.
 function lib.todate(secs)
-  local date = os.date('*t', secs)
-  local hour = date.hour
+  local rawDate = os.date('*t', secs)
+  if type(rawDate) == 'string' then
+    error('os.date returned a string for table format request')
+  end
+
+  local hour = assert(tonumber(rawDate.hour))
   local ap = 'am'
 
-  if date.hour > 11 then ap = 'pm' end
-  if date.hour == 0 then hour = 12 end
-  if date.hour > 12 then hour = date.hour - 12 end
+  if hour > 11 then ap = 'pm' end
+  if hour == 0 then hour = 12 end
+  if hour > 12 then hour = hour - 12 end
 
-  date.hour12 = hour
-  date.ap = ap
+  ---@type TimeDateParts
+  local parts = {
+    year = assert(tonumber(rawDate.year)),
+    month = assert(tonumber(rawDate.month)),
+    day = assert(tonumber(rawDate.day)),
+    hour = assert(tonumber(rawDate.hour)),
+    min = assert(tonumber(rawDate.min)),
+    sec = assert(tonumber(rawDate.sec)),
+    wday = assert(tonumber(rawDate.wday)),
+    yday = assert(tonumber(rawDate.yday)),
+    isdst = rawDate.isdst and true or false,
+    hour12 = hour,
+    ap = ap,
+  }
 
-  return date
+  return parts
 end
 
 -- Return a string that represents an hour based on the given epoch seconds.
