@@ -25,7 +25,6 @@ local function keyCode(key, modifiers)
 		hs.eventtap.event.newKeyEvent(modifiers, string.lower(key), false):post()
 	end
 end
-
 local function keyCodeRightAlt(key)
 	return function()
 		local keyDown = hs.eventtap.event.newKeyEvent({}, string.lower(key), true)
@@ -46,7 +45,8 @@ local function remapKey(key, modifiers, keyCode)
 end
 
 local globalBindings = {
-	{ '§', {}, keyCodeRightAlt('3') }
+	{ '§', {},        keyCodeRightAlt('3') },
+	{ '§', { 'alt' }, keyCode('6', 'alt') },
 }
 
 function bindings.bind()
